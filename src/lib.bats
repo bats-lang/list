@@ -123,3 +123,13 @@ implement {a} is_nil (xs) =
   case+ xs of
   | list_nil() => true
   | list_cons(_, _) => false
+
+(* ============================================================
+   Linear list (for holding linear values like arrays)
+   ============================================================ *)
+
+#pub datavtype list_vt(vt@ype+, int) =
+  | {a:vt@ype} list_vt_nil(a, 0) of ()
+  | {a:vt@ype}{n:nat} list_vt_cons(a, n+1) of (a, list_vt(a, n))
+
+#pub vtypedef listv(a:vt@ype) = [n:nat] list_vt(a, n)
