@@ -1,0 +1,6 @@
+[package]
+name = "linear"
+kind = "bin"
+
+[dependencies]
+"list" = ""
