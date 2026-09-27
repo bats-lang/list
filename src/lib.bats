@@ -133,3 +133,38 @@ implement {a} is_nil (xs) =
   | {a:vt@ype}{n:nat} list_vt_cons(a, n+1) of (a, list_vt(a, n))
 
 #pub vtypedef listv(a:vt@ype) = [n:nat] list_vt(a, n)
+
+(* ============================================================
+   Tests (bats test)
+   ============================================================ *)
+
+$UNITTEST.run begin
+
+(* [k, k + 1, k + 2] (a helper, not a test: tests take no arguments) *)
+fn from3 (k: int): list_t(int, 3) = cons<int>(k, cons<int>(k + 1, cons<int>(k + 2, nil<int>())))
+
+fn test_length (): bool = (length<int>(from3(1)) = 3) && (length<int>(nil<int>()) = 0)
+
+fn test_head_tail (): bool = let
+  val xs = from3(1)
+in (head<int>(xs) = 1) && (head<int>(tail<int>(xs)) = 2) end
+
+fn test_reverse (): bool = let
+  val r = reverse<int>(from3(1))
+in (head<int>(r) = 3) && (head<int>(tail<int>(tail<int>(r))) = 1) end
+
+fn test_map (): bool = let
+  val m = map<int><int>(from3(1), lam (x) =<cloref1> x * 10)
+in (head<int>(m) = 10) && (head<int>(tail<int>(m)) = 20) end
+
+(* foldl is left to right: ((0 - 1) - 2) - 3 *)
+fn test_foldl (): bool =
+  foldl<int><int>(from3(1), 0, lam (acc, x) =<cloref1> acc - x) = ~6
+
+fn test_append (): bool = let
+  val a = append<int>(from3(1), cons<int>(4, nil<int>()))
+in (length<int>(a) = 4) && (head<int>(tail<int>(tail<int>(tail<int>(a)))) = 4) end
+
+fn test_is_nil (): bool = is_nil<int>(nil<int>()) && ~is_nil<int>(from3(1))
+
+end
