@@ -49,7 +49,9 @@ jobs:
           export PATH=~/bats-bin:$PATH
           bats test
 
-      - name: Unit tests
+      - name: Dynamic tests
         run: |
+          sudo apt-get install -y valgrind
           export PATH=~/bats-bin:$PATH
-          bats test
+          git clone https://github.com/bats-lang/repository-prototype.git ~/repository
+          tests/dynamic/run.sh ~/repository
